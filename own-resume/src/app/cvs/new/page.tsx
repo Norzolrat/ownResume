@@ -1,18 +1,23 @@
 "use client";
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function NewCVPage() {
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     title: '',
     email: '',
     phone: '',
+    website: '',
+    address: '',
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -20,11 +25,50 @@ export default function NewCVPage() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("CV data:", formData);
-    // Ici, vous implémenteriez la logique pour enregistrer le CV
-    // et naviguer vers la page d'édition
+    setIsSubmitting(true);
+    
+    try {
+      const response = await fetch('/api/cvs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          defaultTemplate: 'modern', // Template par défaut
+          // Initialisation des sections vides
+          experiences: [],
+          education: [],
+          skills: [],
+          languages: [],
+          interests: [],
+          customSections: {}
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Erreur lors de la création du CV');
+      }
+      
+      const result = await response.json();
+      console.log("CV créé:", result);
+      
+      // S'assurer que result.id existe avant la redirection
+      if (result && result.id) {
+        // Redirection vers la page d'aperçu du CV
+        router.push(`/resume/${result.id}`);
+      } else {
+        console.error('ID du CV manquant dans la réponse');
+        alert('Une erreur est survenue: ID du CV manquant');
+      }
+    } catch (error) {
+      console.error('Erreur:', error);
+      alert('Une erreur est survenue lors de la création du CV');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -47,7 +91,7 @@ export default function NewCVPage() {
                   name="firstName"
                   value={formData.firstName}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
                 />
               </div>
@@ -62,7 +106,7 @@ export default function NewCVPage() {
                   name="lastName"
                   value={formData.lastName}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
                 />
               </div>
@@ -77,7 +121,7 @@ export default function NewCVPage() {
                   name="title"
                   value={formData.title}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="ex: Développeur Full Stack"
                 />
               </div>
@@ -92,7 +136,7 @@ export default function NewCVPage() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
               
@@ -106,7 +150,37 @@ export default function NewCVPage() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="website" className="block text-sm font-medium text-gray-700 mb-1">
+                  Site web
+                </label>
+                <input
+                  type="url"
+                  id="website"
+                  name="website"
+                  value={formData.website}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="https://monsite.com"
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
+                  Adresse
+                </label>
+                <input
+                  type="text"
+                  id="address"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Paris, France"
                 />
               </div>
             </div>
@@ -122,9 +196,10 @@ export default function NewCVPage() {
             
             <button
               type="submit"
-              className="px-4 py-2 bg-primary text-white rounded-md font-medium hover:bg-primary/90 transition-colors"
+              disabled={isSubmitting}
+              className="px-4 py-2 bg-blue-500 text-white rounded-md font-medium hover:bg-blue-600 transition-colors disabled:opacity-70"
             >
-              Créer et continuer
+              {isSubmitting ? 'Création en cours...' : 'Créer et continuer'}
             </button>
           </div>
         </form>

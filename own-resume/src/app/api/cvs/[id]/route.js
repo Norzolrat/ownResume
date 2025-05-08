@@ -2,17 +2,29 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
 // GET /api/cvs/[id] - Récupérer un CV spécifique
-export async function GET(request, { params }) {
+export async function GET(request, context) {
   try {
+    // Accéder à l'ID à partir du contexte
+    const id = context.params.id;
+    console.log(`Requête GET /api/cvs/${id} reçue`);
+    
+    if (!id) {
+      console.log("ID manquant dans la requête");
+      return NextResponse.json({ error: 'ID not provided' }, { status: 400 });
+    }
+    
     const cv = await prisma.cV.findUnique({
       where: {
-        id: params.id,
+        id: id,
       },
     });
     
     if (!cv) {
+      console.log(`CV avec ID ${id} introuvable`);
       return NextResponse.json({ error: 'CV not found' }, { status: 404 });
     }
+    
+    console.log(`CV avec ID ${id} trouvé`);
     
     // Convertir les champs JSON en objets JavaScript
     const formattedCv = {
@@ -27,15 +39,24 @@ export async function GET(request, { params }) {
     
     return NextResponse.json(formattedCv);
   } catch (error) {
-    console.error(`Error fetching CV ${params.id}:`, error);
-    return NextResponse.json({ error: 'Failed to fetch CV' }, { status: 500 });
+    console.error(`Error fetching CV:`, error);
+    return NextResponse.json({ error: 'Failed to fetch CV', details: error.message }, { status: 500 });
   }
 }
 
 // PUT /api/cvs/[id] - Mettre à jour un CV
-export async function PUT(request, { params }) {
+export async function PUT(request, context) {
   try {
+    const id = context.params.id;
+    console.log(`Requête PUT /api/cvs/${id} reçue`);
+    
+    if (!id) {
+      console.log("ID manquant dans la requête");
+      return NextResponse.json({ error: 'ID not provided' }, { status: 400 });
+    }
+    
     const data = await request.json();
+    console.log("Données reçues pour mise à jour:", data);
     
     // Préparer les données pour la mise à jour
     const {
@@ -46,7 +67,7 @@ export async function PUT(request, { params }) {
     // Mettre à jour le CV
     const cv = await prisma.cV.update({
       where: {
-        id: params.id,
+        id: id,
       },
       data: {
         ...basicInfo,
@@ -60,25 +81,35 @@ export async function PUT(request, { params }) {
       },
     });
     
+    console.log(`CV avec ID ${id} mis à jour`);
     return NextResponse.json(cv);
   } catch (error) {
-    console.error(`Error updating CV ${params.id}:`, error);
-    return NextResponse.json({ error: 'Failed to update CV' }, { status: 500 });
+    console.error(`Error updating CV:`, error);
+    return NextResponse.json({ error: 'Failed to update CV', details: error.message }, { status: 500 });
   }
 }
 
 // DELETE /api/cvs/[id] - Supprimer un CV
-export async function DELETE(request, { params }) {
+export async function DELETE(request, context) {
   try {
+    const id = context.params.id;
+    console.log(`Requête DELETE /api/cvs/${id} reçue`);
+    
+    if (!id) {
+      console.log("ID manquant dans la requête");
+      return NextResponse.json({ error: 'ID not provided' }, { status: 400 });
+    }
+    
     await prisma.cV.delete({
       where: {
-        id: params.id,
+        id: id,
       },
     });
     
+    console.log(`CV avec ID ${id} supprimé`);
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error(`Error deleting CV ${params.id}:`, error);
-    return NextResponse.json({ error: 'Failed to delete CV' }, { status: 500 });
+    console.error(`Error deleting CV:`, error);
+    return NextResponse.json({ error: 'Failed to delete CV', details: error.message }, { status: 500 });
   }
 }

@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma';
 // GET /api/cvs - Récupérer tous les CV
 export async function GET() {
   try {
+    console.log("Requête GET /api/cvs reçue");
     const cvs = await prisma.cV.findMany({
       orderBy: {
         updatedAt: 'desc',
@@ -21,6 +22,7 @@ export async function GET() {
       customSections: cv.customSectionsJson ? JSON.parse(cv.customSectionsJson) : {},
     }));
     
+    console.log(`${cvs.length} CV(s) trouvé(s)`);
     return NextResponse.json(formattedCvs);
   } catch (error) {
     console.error('Error fetching CVs:', error);
@@ -31,7 +33,9 @@ export async function GET() {
 // POST /api/cvs - Créer un nouveau CV
 export async function POST(request) {
   try {
+    console.log("Requête POST /api/cvs reçue");
     const data = await request.json();
+    console.log("Données reçues:", data);
     
     // Préparer les données pour l'insertion dans la base de données
     const {
@@ -52,9 +56,10 @@ export async function POST(request) {
       },
     });
     
+    console.log("CV créé avec l'ID:", cv.id);
     return NextResponse.json(cv, { status: 201 });
   } catch (error) {
     console.error('Error creating CV:', error);
-    return NextResponse.json({ error: 'Failed to create CV' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to create CV', details: error.message }, { status: 500 });
   }
 }

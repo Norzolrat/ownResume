@@ -41,25 +41,6 @@ npm run dev
 
 L'application sera accessible à l'adresse [http://localhost:3000](http://localhost:3000).
 
-## Structure du projet
-
-```
-own-resume/
-├── app/                  # Pages de l'application (Next.js App Router)
-│   ├── cvs/              # Pages de gestion des CV
-│   ├── templates/        # Pages de gestion des templates
-│   ├── resume/           # Pages d'affichage et export des CV
-│   └── api/              # API routes pour la gestion des données
-├── components/           # Composants React réutilisables
-│   ├── cv/               # Composants pour l'édition des CV
-│   ├── resume/           # Composants pour l'affichage des CV
-│   ├── template/         # Composants pour l'édition des templates
-│   └── ui/               # Composants UI génériques
-├── lib/                  # Bibliothèques et utilitaires
-│   ├── data/             # Stockage des données JSON
-│   └── utils/            # Fonctions utilitaires
-└── public/               # Fichiers statiques
-```
 
 ## Fonctionnement
 
