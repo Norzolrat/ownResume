@@ -70,8 +70,8 @@ const ModernCV = ({ cv }) => {
           zIndex: 2,
         }}>
           <div style={{
-            width: '180px',
-            height: '180px',
+            width: '160px',
+            height: '160px',
             borderRadius: '50%',
             backgroundColor: '#f7e989',
             margin: '0 auto 20px',
@@ -80,7 +80,7 @@ const ModernCV = ({ cv }) => {
             alignItems: 'center',
             overflow: 'hidden',
           }}>
-            <img src="/api/placeholder/180/180" alt={`Photo de ${cv.firstName} ${cv.lastName}`} style={{ width: '100%', height: 'auto' }} />
+            <img src="https://thispersondoesnotexist.com/" alt={`Photo de ${cv.firstName} ${cv.lastName}`} style={{ width: '100%', height: 'auto' }} />
           </div>
           
           <div>
@@ -202,7 +202,7 @@ const ModernCV = ({ cv }) => {
           {/* En-tête jaune */}
           <div style={{
             backgroundColor: '#f7e989',
-            padding: '20px',
+            // padding: '20px',
             marginTop: '20px',
             marginRight: '20px',
             width: '100%',
@@ -210,12 +210,14 @@ const ModernCV = ({ cv }) => {
             zIndex: 1,
           }}>
             <h1 style={{
+              margin: '20px',
               fontSize: '2.5em',
               marginBottom: '5px',
               fontWeight: 'bold',
             }}>{cv.firstName} {cv.lastName}</h1>
             
             <h2 style={{
+              margin: '20px',
               fontSize: '1.8em',
               marginBottom: '15px',
               fontWeight: 'normal',
