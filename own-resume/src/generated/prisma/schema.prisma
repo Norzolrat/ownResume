@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model CV {
+  id        String  @id @default(uuid())
+  firstName String
+  lastName  String
+  title     String?
+  email     String?
+  phone     String?
+  website   String?
+  address   String?
+
+  // Stockons les sections au format JSON pour plus de flexibilité
+  experiencesJson String? @map("experiences_json") // Stocké comme JSON
+  educationJson   String? @map("education_json") // Stocké comme JSON
+  skillsJson      String? @map("skills_json") // Stocké comme JSON
+  languagesJson   String? @map("languages_json") // Stocké comme JSON
+  interestsJson   String? @map("interests_json") // Stocké comme JSON
+
+  // Sections personnalisées
+  customSectionsJson String? @map("custom_sections_json") // Stocké comme JSON
+
+  defaultTemplate String   @default("modern")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Template {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  displayName String
+  author      String
+  description String?
+
+  // Styles stockés au format JSON
+  stylesJson String @map("styles_json") // Stocké comme JSON
+
+  layout    String   @default("single")
+  html      String // Le contenu HTML du template
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -226,21 +226,3 @@
     }
   }
 }
-
-@layer components {
-  .btn {
-    @apply rounded-md font-medium transition-colors px-4 py-2;
-  }
-  
-  .btn-primary {
-    @apply bg-primary text-white hover:bg-primary/90;
-  }
-  
-  .btn-outline {
-    @apply bg-white text-primary border border-primary hover:bg-gray-50;
-  }
-  
-  .card {
-    @apply bg-white rounded-lg shadow-md p-6;
-  }
-}

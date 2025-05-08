@@ -11,22 +11,22 @@ export default function Home() {
           Une solution complète pour créer, personnaliser et exporter vos CV en quelques clics
         </p>
         
-        <div className="flex flex-col md:flex-row justify-center gap-4">
+        <div className="flex flex-row justify-center gap-4">
           <Link
             href="/cvs"
-            className="px-6 py-3 bg-primary text-white rounded-md font-medium hover:bg-primary/90 transition text-center"
+            className="px-6 py-3 bg-primary text-white rounded-md font-medium hover:bg-primary/90 hover:shadow-lg transition-all duration-300 text-center min-w-[150px] no-underline inline-block"
           >
             Gérer mes CV
           </Link>
           <Link
             href="/templates"
-            className="px-6 py-3 bg-white text-primary border border-primary rounded-md font-medium hover:bg-gray-50 transition text-center"
+            className="px-6 py-3 bg-white text-primary border border-primary rounded-md font-medium hover:bg-gray-50 hover:shadow-lg transition-all duration-300 text-center min-w-[150px] no-underline inline-block"
           >
             Explorer les templates
           </Link>
           <Link
             href="/resume/example-cv"
-            className="px-6 py-3 bg-gray-200 text-gray-800 rounded-md font-medium hover:bg-gray-300 transition text-center"
+            className="px-6 py-3 bg-gray-200 text-gray-800 rounded-md font-medium hover:bg-gray-300 hover:shadow-lg transition-all duration-300 text-center min-w-[150px] no-underline inline-block"
           >
             Voir un exemple
           </Link>
